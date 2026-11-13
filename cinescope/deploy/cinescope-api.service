@@ -1,0 +1,56 @@
+[Unit]
+Description=CineScope FastAPI and React Dashboard
+Documentation=https://fastapi.tiangolo.com/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+User=hadoop
+Group=hadoop
+
+WorkingDirectory=/opt/cinescope/app
+
+Environment=HOME=/home/hadoop
+EnvironmentFile=/etc/cinescope/cluster.env
+Environment=PYTHONPATH=/opt/cinescope/app
+
+Environment=CINESCOPE_HOME=/opt/cinescope
+Environment=CINESCOPE_DATA_ROOT=/var/lib/cinescope
+Environment=CINESCOPE_MASTER_HOST=master
+
+Environment=HADOOP_HOME=/opt/hadoop
+Environment=HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+Environment=YARN_CONF_DIR=/opt/hadoop/etc/hadoop
+Environment=HADOOP_MAPRED_HOME=/opt/hadoop
+
+Environment=SPARK_HOME=/opt/spark
+Environment=SPARK_CONF_DIR=/opt/spark/conf
+Environment=CINESCOPE_HDFS=hdfs://master:8020
+
+Environment=HADOOP_LOG_DIR=/var/log/hadoop
+Environment=HADOOP_PID_DIR=/var/lib/hadoop/pids
+
+Environment=PYSPARK_PYTHON=/usr/bin/python3
+
+Environment=PATH=/opt/cinescope/.venv/bin:/opt/hadoop/bin:/opt/hadoop/sbin:/opt/spark/bin:/opt/spark/sbin:/usr/local/bin:/usr/bin:/bin
+
+Environment=PYTHONUNBUFFERED=1
+
+UMask=0027
+
+LimitNOFILE=65536
+
+ExecStartPre=/usr/bin/test -d /opt/cinescope/web
+ExecStartPre=/usr/bin/test -x /opt/cinescope/.venv/bin/uvicorn
+
+ExecStart=/opt/cinescope/.venv/bin/uvicorn api.main:app --host 0.0.0.0 --port 8000
+
+Restart=on-failure
+RestartSec=5
+
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

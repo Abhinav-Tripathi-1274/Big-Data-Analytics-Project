@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+body { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+th { text-align: left; font-size: .69rem; text-transform: uppercase; letter-spacing: .08em; color: rgb(100 116 139); padding-bottom: .5rem; }
+.title { font-size: 1.875rem; line-height: 2.25rem; font-weight: 900; letter-spacing: -.035em; }
