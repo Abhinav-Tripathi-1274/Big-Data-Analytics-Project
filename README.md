@@ -3,13 +3,13 @@
 **Project Topic:** Movie Rating Analysis (MovieLens + Spark)  
 **Product Name:** CineScope
 
-### Team Members
+## Team Members
 
 Abhinav Tripathi, 231210002<br>
 Ashutosh Dayal, 231210028<br>
 Ayush Goyal, 231210031
 
-### About
+## About
 
 **Movie Rating Analysis (MovieLens + Spark)** is a Big Data Analytics course project developed by our team under the name **CineScope**.
 
