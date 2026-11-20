@@ -252,8 +252,8 @@ function Home() {
         </h1>
 
         <p className="mt-3 max-w-2xl text-white/85">
-          Spark on YARN and Hadoop MapReduce run across two physical
-          worker PCs, with results checked for agreement.
+          Spark on YARN and Hadoop MapReduce work across two DataNode /
+          NodeManager containers, with results checked for agreement.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-3">
@@ -961,7 +961,7 @@ function Cluster() {
                       </span>
 
                       <span className="text-sm text-slate-500">
-                        {n.state} · {n.containers} YARN containers ·{' '}
+                        {n.state} · {n.containers} containers ·{' '}
                         {fmt(n.memUsedMB)}/
                         {fmt(n.memUsedMB + n.memAvailMB)} MB
                       </span>
@@ -1071,13 +1071,10 @@ function About() {
 
       <Card title="Project">
         <p>
-          CineScope analyzes MovieLens ratings on three physical Ubuntu
-          PCs: one master and two workers. The master runs the NameNode,
-          SecondaryNameNode, ResourceManager, Spark driver, JobHistory
-          Server, FastAPI and dashboard. Each worker runs a Hadoop
-          DataNode and a YARN NodeManager. Spark and Hadoop MapReduce
-          process the distributed data, and their results are checked
-          for agreement.
+          CineScope analyzes MovieLens ratings on one master and two worker
+          containers. The master is the NameNode, ResourceManager, Spark
+          driver, API and UI. The workers are DataNode and NodeManager
+          services.
         </p>
       </Card>
 

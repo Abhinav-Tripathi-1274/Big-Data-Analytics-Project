@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<configuration>
+  <property><name>dfs.namenode.name.dir</name><value>file:///var/lib/hadoop/namenode</value></property>
+  <property><name>dfs.datanode.data.dir</name><value>file:///var/lib/hadoop/datanode</value></property>
+  <property><name>dfs.namenode.rpc-address</name><value>master:8020</value></property>
+  <property><name>dfs.namenode.http-address</name><value>master:9870</value></property>
+  <property><name>dfs.namenode.secondary.http-address</name><value>master:9868</value></property>
+  <property><name>dfs.replication</name><value>2</value></property>
+  <property><name>dfs.blocksize</name><value>33554432</value></property>
+  <property><name>dfs.permissions.enabled</name><value>true</value></property>
+</configuration>

@@ -11,15 +11,9 @@ from pathlib import Path
 import httpx
 import pandas as pd
 
-DATA_ROOT = Path(
-    os.environ.get(
-        "CINESCOPE_DATA_ROOT",
-        "/var/lib/cinescope",
-    )
-)
 
-RESULTS = DATA_ROOT / "results"
-RAW = DATA_ROOT / "raw"
+RESULTS = Path("/data/results")
+RAW = Path("/data/raw")
 
 MOVIES_PATH = RESULTS / "movies_all"
 OUT = RESULTS / "posters.json"
@@ -490,3 +484,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

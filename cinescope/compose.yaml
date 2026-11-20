@@ -1,0 +1,78 @@
+name: cinescope
+
+services:
+  master:
+    build:
+      context: .
+      args:
+        HADOOP_VERSION: ${HADOOP_VERSION:-3.4.3}
+        SPARK_VERSION: ${SPARK_VERSION:-3.5.9}
+    image: cinescope-hadoop:${HADOOP_VERSION:-3.4.3}-${SPARK_VERSION:-3.5.9}
+    # This is a locally built teaching image, never an image to pull from a registry.
+    pull_policy: build
+    hostname: master
+    command: ["master"]
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+      - "127.0.0.1:${HDFS_UI_PORT:-9870}:9870"
+      - "127.0.0.1:${YARN_UI_PORT:-8088}:8088"
+      - "127.0.0.1:${MAPREDUCE_HISTORY_PORT:-19888}:19888"
+      - "127.0.0.1:${SPARK_HISTORY_PORT:-18080}:18080"
+    volumes:
+      - namenode:/var/lib/hadoop/namenode
+      - shared-data:/data
+      - ./app:/workspace:ro
+    mem_limit: ${MASTER_MEMORY:-3g}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://master:9870/jmx?qry=Hadoop:service=NameNode,name=NameNodeStatus >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 40s
+    restart: unless-stopped
+
+  worker1:
+    image: cinescope-hadoop:${HADOOP_VERSION:-3.4.3}-${SPARK_VERSION:-3.5.9}
+    hostname: worker1
+    command: ["worker"]
+    depends_on:
+      master:
+        condition: service_healthy
+    volumes:
+      - worker1-data:/var/lib/hadoop/datanode
+    mem_limit: ${WORKER_MEMORY:-3g}
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - jps | awk '$2 == "DataNode" {dn=1} $2 == "NodeManager" {nm=1} END {exit !(dn && nm)}'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 25s
+    restart: unless-stopped
+
+  worker2:
+    image: cinescope-hadoop:${HADOOP_VERSION:-3.4.3}-${SPARK_VERSION:-3.5.9}
+    hostname: worker2
+    command: ["worker"]
+    depends_on:
+      master:
+        condition: service_healthy
+    volumes:
+      - worker2-data:/var/lib/hadoop/datanode
+    mem_limit: ${WORKER_MEMORY:-3g}
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - jps | awk '$2 == "DataNode" {dn=1} $2 == "NodeManager" {nm=1} END {exit !(dn && nm)}'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 25s
+    restart: unless-stopped
+
+volumes:
+  namenode:
+  worker1-data:
+  worker2-data:
+  shared-data:
